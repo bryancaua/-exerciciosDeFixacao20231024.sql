@@ -1,3 +1,5 @@
+--exer 1
+
 DELIMITER //
 CREATE TRIGGER insere_cliente_trigger
 AFTER INSERT ON Clientes
@@ -8,3 +10,18 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+ --exer 2
+
+DELIMITER //
+CREATE TRIGGER tentativa_exclusao_cliente_trigger
+BEFORE DELETE ON Clientes
+FOR EACH ROW
+BEGIN
+    INSERT INTO Auditoria (mensagem) VALUES ('Tentativa de exclusão do cliente ' 
+        CONCAT(OLD.nome, ' em ', NOW()));
+    -- Você pode adicionar código adicional para manipular a exclusão, se necessário.
+END;
+//
+DELIMITER ;
+
