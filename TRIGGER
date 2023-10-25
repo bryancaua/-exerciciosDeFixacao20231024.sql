@@ -35,7 +35,6 @@ BEGIN
     IF NEW.nome IS NULL OR NEW.nome = '' THEN
         INSERT INTO Auditoria (mensagem) VALUES ('Tentativa de atualização do nome para vazio ou NULL por cliente ' 
             CONCAT(OLD.nome, ' em ', NOW()));
-        -- Impede a atualização do nome
         SET NEW.nome = OLD.nome;
     ELSE
         INSERT INTO Auditoria (mensagem) VALUES ('Nome do cliente ' 
