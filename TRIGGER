@@ -1,4 +1,3 @@
---exer 1
 
 DELIMITER //
 CREATE TRIGGER insere_cliente_trigger
@@ -11,7 +10,6 @@ END;
 //
 DELIMITER ;
 
- --exer 2
 
 DELIMITER //
 CREATE TRIGGER tentativa_exclusao_cliente_trigger
@@ -24,8 +22,6 @@ BEGIN
 END;
 //
 DELIMITER ;
-
---exer 3
 
 DELIMITER //
 CREATE TRIGGER atualiza_nome_cliente_trigger
@@ -43,5 +39,23 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER insere_pedido_trigger
+AFTER INSERT ON Pedidos
+FOR EACH ROW
+BEGIN
+    UPDATE Produtos
+    SET estoque = estoque - NEW.quantidade
+    WHERE id = NEW.produto_id;
+
+    IF (SELECT estoque FROM Produtos WHERE id = NEW.produto_id) < 5 THEN
+        INSERT INTO Auditoria (mensagem) VALUES ('Estoque baixo: Produto ' 
+            CONCAT((SELECT nome FROM Produtos WHERE id = NEW.produto_id), ' com estoque abaixo de 5 unidades em ', NOW()));
+    END IF;
+END;
+//
+DELIMITER ;
+
 
 
